@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+        {% for post in posts %}
+            <div class="card" style="width: auto;">
+                <div class="card-body">
+                    <a href="/q/{{ post.title }}" class="btn btn-primary">Box number {{ post.title }} </a>
+                    <section id="gallery" class="row no-gutters">
+                        {% for image in  post.postimage_set.all %}
+                            <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
+                                <img src="/images/{{image.image}}" class="w-100">
+                            </a>
+                        {% endfor %}
+                    </section>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

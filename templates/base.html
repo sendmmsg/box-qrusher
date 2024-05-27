@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <title>Box QRuncher 3000</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/static/css/tagsinput.css" />
+    </head>
+
+    <body>
+        <div class="container">
+            <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+                <div class="col-md-3 mb-2 mb-md-0">
+                </div>
+                <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="/" class="nav-link px-2">Boxes</a></li>
+                    <li><a href="#" class="nav-link px-2">Tags</a></li>
+                    <li><a href="/img" class="nav-link px-2">Images</a></li>
+                </ul>
+            </header>
+        </div>
+        <script src="/static/js/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+
+        <script src="/static/js/ImageUploader.js"></script>
+        <script src="/static/js/jquery-image-upload-resizer.js"></script>
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="/static/js/tagsinput.js"></script>
+        <script>
+         function replaceInsert(tag) {
+	         textstr = document.getElementById("tagsinput").value;
+             console.log("Textstr: '" + textstr + "'");
+             console.log("Textstr len: " + textstr.length);
+             textstr = textstr.replace(/ /g,'')
+
+             res = textstr.search("," + tag + ",");
+             if(res != -1){
+                 console.log("replacing in middle");
+                 textstr = textstr.replace(","+tag, "");
+                 $("input[data-role=tagsinput]").tagsinput('removeAll');
+                 $("input[data-role=tagsinput]").tagsinput('add', textstr);
+                 return;
+             }
+             res = textstr.search("," + tag);
+             if(res != -1){
+                 textstr = textstr.replace(","+tag, "");
+                 $("input[data-role=tagsinput]").tagsinput('removeAll');
+                 $("input[data-role=tagsinput]").tagsinput('add', textstr);
+                 return;
+             }
+             res = textstr.search(tag+ ",");
+             if(res != -1){
+                 textstr = textstr.replace(tag+",", "");
+                 $("input[data-role=tagsinput]").tagsinput('removeAll');
+                 $("input[data-role=tagsinput]").tagsinput('add', textstr);
+                 return;
+             }
+             if(textstr.length == 0){
+                 textstr = tag;
+             } else {
+                 textstr = textstr + "," + tag;
+             }
+
+             $("input[data-role=tagsinput]").tagsinput('removeAll');
+             $("input[data-role=tagsinput]").tagsinput('add', textstr);
+             // console.log("Textstr: '" + textstr + "'");
+             // document.getElementById("tagsinput").value = textstr;
+             // document.getElementById("tagsinput").setAttribute("value",  textstr);
+             // console.log(document.getElementById("tagsinput"));
+             // console.log($('#tagsinput'));
+             //.tagsinput();
+
+         }
+        </script>
+        <script>
+         $("#post-form").submit(function(e){
+             e.preventDefault();
+         });</script>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
