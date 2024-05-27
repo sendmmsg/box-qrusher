@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from posts.views import home_view, detail_view, tagged, upload_view, image_view, rawupload_view
+from posts.views import home_view, detail_view, tagged_view, upload_view, image_view, rawupload_view
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -27,5 +27,5 @@ urlpatterns = [
     path('img/', image_view, name="images"),
     path('upload/<slug:slug>', upload_view, name="upload"),
     path('rawupload/<slug:slug>', rawupload_view, name="rawupload"),
-    path('tag/<slug:slug>/', tagged, name="tagged"),
+    path('tag/<slug:slug>/', tagged_view, name="tagged"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,11 +2,16 @@
 
 {% block content %}
         <div class="container pt-5">
-            <p>Tags:</p>
-            {% for mt in popular_tags %}
-	            <a href="/tag/{{ mt.tag | slugify }}" class="badge badge-success">{{ mt.tag }}</a>
-            {% endfor %}
-            </p>
+        <div class="card" style="width: auto;">
+            <div class="card-body">
+                <h5 class="card-title">Tag <b>{{ tag }}</b> </h5>
+                    <p class="card-text">
+                        {% for mt in tags %}
+	                        <a href="/tag/{{ mt.tag | slugify }}" class="badge badge-success">{{ mt.tag }}</a>
+                        {% endfor %}
+                </p>
+            </div>
+        </div>
             <p>QRunched boxes</p>
             <div class="row mb-2 posts">
                     {% for post in posts %}
@@ -21,6 +26,13 @@
                                         {% endfor %}
                                     </div>
                                     <p class="mb-auto text-muted">{{ post.published }}</p>
+                    <section id="gallery" class="row no-gutters">
+                        {% for image in  post.postimage_set.all %}
+                            <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
+                                <img loading="lazy" src="/images/{{image.image}}" class="w-100">
+                            </a>
+                        {% endfor %}
+                    </section>
                                 </div>
                             </div>
                         </div>       

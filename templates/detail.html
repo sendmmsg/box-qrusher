@@ -1,7 +1,66 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container-fluid">
+    <style>
+.img-wrapper {
+  position: relative;
+}
+.img-overlay .btn {
+  position: absolute;
+  top: 7%;
+  left: 7%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 16px;
+  padding: 2px 2px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.img-overlay .btn:hover {
+  background-color: black;
+}
+
+    </style>
+    <script>
+     <script>
+     // Get the modal
+     var modal = document.getElementById('id01');
+
+     // When the user clicks anywhere outside of the modal, close it
+     window.onclick = function(event) {
+         if (event.target == modal) {
+             modal.style.display = "none";
+         }
+     }
+</script>
+
+    </script>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          Do you want to delete image blalba?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Delete image</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
         <div class="card" style="width: auto;">
             <div class="card-body">
                 <h5 class="card-title">Box number {{ post.title }} </h5>
@@ -33,13 +92,12 @@
             <div class="card-body">
                 <h5 class="card-title">Image upload</h5>
 	            <input id="fileInputElement" name="uploaded_file" class="btn btn-primary" type="file"  accept="image/*" capture="environment" multiple />
-	            <div id="fileProgress"></div>
                 <div class="progress">
                     <div id="pb" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
+	            <div id="fileProgress"></div>
             </div>
         </div>
-
 
     {% csrf_token %}
 	    <script type="text/javascript">
@@ -72,9 +130,14 @@
                 <h5 class="card-title">Box content</h5>
                 <section id="gallery" class="row no-gutters">
                     {% for image in images %}
-                        <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
-                            <img src="/images/{{image.image}}" class="w-100">
-                        </a>
+                        <div class="img-wrapper">
+                            <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
+                                <img src="/images/{{image.image}}" class="w-100">
+                            </a>
+                            <div class="img-overlay">
+                                <button data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-md btn-success">X</button>
+                            </div>
+                        </div>
                     {% endfor %}
                 </section>
             </div>

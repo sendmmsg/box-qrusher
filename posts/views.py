@@ -13,12 +13,34 @@ import base64
 import uuid
 import os
 
+def get_tags_popularity():
+    clear_unused_tags()
+    tags = []
+    with connection.cursor() as cursor:
+        stmt ="SELECT a.id as pk, name AS tag, count(*) AS freq FROM taggit_tag a LEFT JOIN taggit_taggeditem b ON a.id = b.tag_id GROUP BY b.tag_id ORDER BY freq DESC;"
+        pks = []
+        cursor.execute(stmt)
+        try:
+            while True:
+                pk, name, freq = cursor.fetchone()
+                tags.append({"tag":Tag.objects.get(pk=pk), "freq":freq})
+                pks.append(pk)
+        except TypeError:
+            pass
+    #a = Tag.objects.filter(pk__in=pks)
+    #print(a)
+    return tags
+
+
+
 def clear_unused_tags():
     with connection.cursor() as cursor:
         stmt = "DELETE FROM taggit_tag WHERE id in (SELECT a.id FROM taggit_tag a LEFT JOIN taggit_taggeditem b ON a.id = b.tag_id WHERE b.tag_id IS NULL);"
         cursor.execute(stmt)
 
 def home_view(request):
+    popular = get_tags_popularity()
+    print(popular)
     posts = Post.objects.all()
     common_tags = Tag.objects.all()
     #Post.tags.most_common()
@@ -35,6 +57,7 @@ def home_view(request):
     context = {
         'posts':posts,
         'common_tags':common_tags,
+        'popular_tags':popular
     }
     return render(request, 'home.html', context)
 
@@ -61,6 +84,17 @@ def upload_view(request, slug):
 def image_view(request):
     posts = Post.objects.all()
     images = PostImage.objects.all
+    context = {
+        'posts':posts,
+        'images':images
+    }
+    return render(request, 'images.html', context)
+
+def tag_image_view(request):
+    popular = get_tags_popularity()
+    print(popular)
+    posts = Post.objects.all()
+    images = PostImage.objects.all()
     context = {
         'posts':posts,
         'images':images
@@ -118,14 +152,15 @@ def detail_view(request, slug):
     clear_unused_tags()
     return render(request, 'detail.html', context)
 
-def tagged(request, slug):
+def tagged_view(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
-    #common_tags = Post.tags.most_common()[:4]
-    common_tags = Tag.objects.all()
     posts = Post.objects.filter(tags=tag)
+    #popular = Tag.objects.all()
+    popular =  get_tags_popularity()
+    print(popular)
     context = {
         'tag':tag,
-        'common_tags':common_tags,
+        'tags':popular,
         'posts':posts,
     }
-    return render(request, 'home.html', context)
+    return render(request, 'tagged.html', context)

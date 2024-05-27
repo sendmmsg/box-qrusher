@@ -9,7 +9,7 @@
                     <section id="gallery" class="row no-gutters">
                         {% for image in  post.postimage_set.all %}
                             <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
-                                <img src="/images/{{image.image}}" class="w-100">
+                                <img loading="lazy" src="/images/{{image.image}}" class="w-100">
                             </a>
                         {% endfor %}
                     </section>
