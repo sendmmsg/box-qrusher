@@ -25,9 +25,16 @@ SECRET_KEY = 'mz(g%334dhpw+5bm(2$7%x_f=chzjglgt2=#a&2hvru%07%1e%'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["frasse.fenrir-turtle.ts.net", "localhost", "frasse"]
+ALLOWED_HOSTS = [
+        "frasse.fenrir-turtle.ts.net", 
+        "topo.fenrir-turtle.ts.net",
+        "localhost", 
+        "frasse", 
+        "topo"
+        ]  
 
 # Application definition
+LOGIN_URL = "/accounts/login/"
 MEDIA_URL = "/images/"
 MEDIA_ROOT = os.path.join(BASE_DIR,"images/")
 print(f"MEDIA_ROOT: {MEDIA_ROOT}")
@@ -124,6 +131,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-CSRF_TRUSTED_ORIGINS = ['http://frasse.fenrir-turtle.ts.net',
-                        'https://frasse.fenrir-turtle.ts.net']
+CSRF_TRUSTED_ORIGINS = [
+        'http://frasse.fenrir-turtle.ts.net', 
+        'https://frasse.fenrir-turtle.ts.net',
+        'http://topo.fenrir-turtle.ts.net', 
+        'https://topo.fenrir-turtle.ts.net',
+        ]
 

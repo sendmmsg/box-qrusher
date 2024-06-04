@@ -18,4 +18,5 @@ class Post(models.Model):
 class PostImage(models.Model):
     pi_id = models.AutoField(primary_key=True)
     image = models.ImageField()
+    hidden = models.BooleanField(default=False)
     post = models.ForeignKey(Post,blank = True, null = True, on_delete=models.CASCADE)

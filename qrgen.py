@@ -57,7 +57,7 @@ def render_svg(prefix,pagenum):
     return res
 
 with open("page0.svg", "w+") as fp:
-    fp.write(render_svg("http://frasse.fenrir-turtle.ts.net/q/",0))
+    fp.write(render_svg("http://topo.fenrir-turtle.ts.net/q/",0))
 with open("page1.svg", "w+") as fp:
     fp.write(render_svg("http://frasse.fenrir-turtle.ts.net/q/",1))
 with open("page2.svg", "w+") as fp:

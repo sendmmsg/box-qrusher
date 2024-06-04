@@ -1,6 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 
 from .models import Post, PostImage
 from .forms import PostForm, PostImageForm
@@ -8,10 +11,37 @@ from .forms import PostForm, PostImageForm
 from taggit.models import Tag
 from django.template.defaultfilters import slugify
 from django.http import HttpResponse
+from django_htmx.http import HttpResponseClientRedirect
 from django.db import connection
 import base64
 import uuid
 import os
+
+def auth_view(request):
+    username = request.POST["username"]
+    password = request.POST["password"]
+    next_url = request.POST["next"]
+
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        # redirect to start page
+        return redirect(next_url)
+    else:
+        # use HX-Events to trigger a modal view on login page
+        # informing about authentication error
+        return redirect(f"/accounts/login?next={next_url}&msg=error")
+
+def login_view(request):
+    n = request.GET.get("next","/")
+    msg = request.GET.get("msg", None)
+    context = {"next":n, "msg":msg}
+    print(f"context: {context}")
+    return render(request, 'login.html', context)
+
+def logout_view(request):
+    logout(request)
+    return redirect("/")
 
 def get_tags_popularity():
     clear_unused_tags()
@@ -38,22 +68,11 @@ def clear_unused_tags():
         stmt = "DELETE FROM taggit_tag WHERE id in (SELECT a.id FROM taggit_tag a LEFT JOIN taggit_taggeditem b ON a.id = b.tag_id WHERE b.tag_id IS NULL);"
         cursor.execute(stmt)
 
+@login_required
 def home_view(request):
     popular = get_tags_popularity()
-    print(popular)
     posts = Post.objects.all()
     common_tags = Tag.objects.all()
-    #Post.tags.most_common()
-    # form = PostForm(request.POST)
-    # if form.is_valid():
-
-    #     newpost = form.save(commit=False)
-    #     newpost.slug = slugify(newpost.title)
-    #     newpost.save()
-    #     form.save_m2m()
-    # else:
-    #     print("home_view: form is not valid!")
-    #     print(form.errors)
     context = {
         'posts':posts,
         'common_tags':common_tags,
@@ -61,6 +80,7 @@ def home_view(request):
     }
     return render(request, 'home.html', context)
 
+@login_required
 def upload_view(request, slug):
     form =  PostImageForm(request.POST, request.FILES)
     if form.is_valid():
@@ -81,6 +101,7 @@ def upload_view(request, slug):
 
     return HttpResponse(status=204)
 
+@login_required
 def image_view(request):
     posts = Post.objects.all()
     images = PostImage.objects.all
@@ -90,6 +111,7 @@ def image_view(request):
     }
     return render(request, 'images.html', context)
 
+@login_required
 def tag_image_view(request):
     popular = get_tags_popularity()
     print(popular)
@@ -101,6 +123,7 @@ def tag_image_view(request):
     }
     return render(request, 'images.html', context)
 
+@login_required
 def rawupload_view(request, slug):
     post = Post.objects.get(title=slug)
     binary = base64.b64decode(request.body)
@@ -116,10 +139,13 @@ def rawupload_view(request, slug):
         pi.post=post
         pi.save()
         print("Created PostImage and linked to post")
-        return HttpResponse(status=200)
+        res=HttpResponse(status=200)
+        res.headers['HX-Trigger'] = "wire-reload"
+        return res
 
     return HttpResponse(status=500)
 
+@login_required
 def detail_view(request, slug):
     form = PostForm(request.POST)
     images = []
@@ -152,6 +178,22 @@ def detail_view(request, slug):
     clear_unused_tags()
     return render(request, 'detail.html', context)
 
+@login_required
+def delimage_view(request,slug):
+    print("delimage_view")
+    print(request.headers)
+    pi = PostImage.objects.get(pk=slug)
+    if pi.hidden == False:
+        print(f"PostImage {pi}  settings to Hidden") 
+        pi.hidden = True
+    else:
+        print(f"PostImage {pi}  settings to Visible") 
+        pi.hidden = False
+    pi.save()
+    url = request.headers["Hx-Current-Url"]
+    return HttpResponseClientRedirect(url)
+
+@login_required
 def tagged_view(request, slug):
     tag = get_object_or_404(Tag, slug=slug)
     posts = Post.objects.filter(tags=tag)

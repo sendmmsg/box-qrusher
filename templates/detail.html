@@ -9,12 +9,12 @@
   position: absolute;
   top: 7%;
   left: 7%;
-  transform: translate(-50%, -50%);
+  transform: translate(-20%, -20%);
   -ms-transform: translate(-50%, -50%);
   background-color: #555;
   color: white;
   font-size: 16px;
-  padding: 2px 2px;
+  padding: 7px 8px;
   border: none;
   cursor: pointer;
   border-radius: 5px;
@@ -24,22 +24,8 @@
   background-color: black;
 }
 
-    </style>
-    <script>
-     <script>
-     // Get the modal
-     var modal = document.getElementById('id01');
-
-     // When the user clicks anywhere outside of the modal, close it
-     window.onclick = function(event) {
-         if (event.target == modal) {
-             modal.style.display = "none";
-         }
-     }
-</script>
-
-    </script>
-
+        </style>
+    
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -55,7 +41,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Delete image</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" hx-post="/delimage/pk" >Delete image</button>
       </div>
     </div>
   </div>
@@ -116,7 +102,7 @@
             	 $('#fileProgress').append('Finished file '+file.fileName+' with response from server '+event.target.status+'<br />');
              },
              onComplete : function(event) {
-                 $('#progress').text('Completed all '+event.done+' files!');
+                 $('#progress').text('Completed all '+event.done+' files!');window.location.reload();
                  //$('#progressbar').progressbar({ value: (event.done / event.total) * 100 })
              },
              maxWidth: 1024,
@@ -125,19 +111,22 @@
              debug : false
          });
         </script>
-        <div class="card" style="width: auto;">
+        <div class="card" style="width: auto;" hx-trigger=loadd,'wire-reload from:body'>
             <div class="card-body">
+
                 <h5 class="card-title">Box content</h5>
                 <section id="gallery" class="row no-gutters">
                     {% for image in images %}
+                    {% if not image.hidden %}
                         <div class="img-wrapper">
                             <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
                                 <img src="/images/{{image.image}}" class="w-100">
                             </a>
                             <div class="img-overlay">
-                                <button data-toggle="modal" data-target="#exampleModalCenter" class="btn btn-md btn-success">X</button>
-                            </div>
+                                <button hx-post="/delimage/{{image.pk}}" class="btn btn-md btn-success">X</button>
+                          </div>
                         </div>
+                        {% endif %}
                     {% endfor %}
                 </section>
             </div>
