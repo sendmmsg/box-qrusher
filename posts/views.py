@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Post, PostImage
 from .forms import PostForm, PostImageForm
+from .qrgen import render_svg
 
 from taggit.models import Tag
 from django.template.defaultfilters import slugify
@@ -41,6 +42,13 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
+    return redirect("/")
+
+def qrgen_view(request):
+    prefix = request.GET.get("prefix","fail")
+    startnum = int(request.GET.get("startnum","0"))
+    return HttpResponse(render_svg(prefix,startnum))
+def qr_view(request):
     return redirect("/")
 
 def get_tags_popularity():
@@ -180,7 +188,6 @@ def detail_view(request, slug):
 
 @login_required
 def delimage_view(request,slug):
-    print("delimage_view")
     print(request.headers)
     pi = PostImage.objects.get(pk=slug)
     if pi.hidden == False:

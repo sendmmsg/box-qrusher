@@ -23,7 +23,7 @@ def get_qr_svg(text):
     res = svg_file.getbuffer().tobytes().decode()
     return res
 
-def render_svg(prefix,pagenum):
+def render_svg(prefix,startnum):
     from bs4 import BeautifulSoup
     paths = []
     labels = []
@@ -35,7 +35,7 @@ def render_svg(prefix,pagenum):
     ywidth = 60
     for y in range(ynum):
         for x in range(xnum):
-            c = x + y*xnum + pagenum*(xnum*ynum)
+            c = x + y*xnum + startnum
             b = BeautifulSoup(get_qr_svg(f"{prefix}{c}"), features="lxml")
             tag = b.path
             tag["id"] = f"qr-tag-{c}"
@@ -56,9 +56,10 @@ def render_svg(prefix,pagenum):
     res += "</svg>"
     return res
 
-with open("page0.svg", "w+") as fp:
-    fp.write(render_svg("http://topo.fenrir-turtle.ts.net/q/",0))
-with open("page1.svg", "w+") as fp:
-    fp.write(render_svg("http://frasse.fenrir-turtle.ts.net/q/",1))
-with open("page2.svg", "w+") as fp:
-    fp.write(render_svg("http://frasse.fenrir-turtle.ts.net/q/",2))
+if __name__ == "__main__":
+    with open("page0.svg", "w+") as fp:
+        fp.write(render_svg("http://topo.fenrir-turtle.ts.net/q/",0))
+    with open("page1.svg", "w+") as fp:
+        fp.write(render_svg("http://frasse.fenrir-turtle.ts.net/q/",1))
+    with open("page2.svg", "w+") as fp:
+        fp.write(render_svg("http://frasse.fenrir-turtle.ts.net/q/",2))
