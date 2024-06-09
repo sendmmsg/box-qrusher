@@ -26,6 +26,7 @@
   .badge-tag{
     background-color: #17a2b8;
     color: white;
+    float: left;
   }
   .bootstrap-tagsinput.form-control input::-moz-placeholder {
     color: #777;

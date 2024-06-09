@@ -7,52 +7,72 @@
         <link rel="stylesheet" href="/static/css/tagsinput.css" />
     </head>
 
-    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' 
-        hx-trigger=load,'wire-reload from:body'>
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-trigger="load,wire-reload from:body">
         <div class="container">
             <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
                 <div class="col-md-3 mb-2 mb-md-0">
                 </div>
                 <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="/" class="nav-link px-2">Boxes</a></li>
-                    <li><a href="#" class="nav-link px-2">Tags</a></li>
+                    <li>
+<a href="/" class="nav-link px-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-qr-code" viewBox="0 0 16 16">
+  <path d="M2 2h2v2H2z"/>
+  <path d="M6 0v6H0V0zM5 1H1v4h4zM4 12H2v2h2z"/>
+  <path d="M6 10v6H0v-6zm-5 1v4h4v-4zm11-9h2v2h-2z"/>
+  <path d="M10 0v6h6V0zm5 1v4h-4V1zM8 1V0h1v2H8v2H7V1zm0 5V4h1v2zM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8zm0 0v1H2V8H1v1H0V7h3v1zm10 1h-1V7h1zm-1 0h-1v2h2v-1h-1zm-4 0h2v1h-1v1h-1zm2 3v-1h-1v1h-1v1H9v1h3v-2zm0 0h3v1h-2v1h-1zm-4-1v1h1v-2H7v1z"/>
+  <path d="M7 12h1v3h4v1H7zm9 2v2h-3v-1h2v-1z"/>
+</svg>
+</a>
+                    </li>
+                    <!-- <li><a href="/" class="nav-link px-2">Boxes</a></li> -->
                     <li><a href="/img" class="nav-link px-2">Images</a></li>
-                </ul>
                 {% if user.is_authenticated %}
-                  <a href="/accounts/logout">{{ user.username }}</a>
+                <li>  <a href="/accounts/logout" class="nav-link px-2" >{{ user.username }}</a></li>
                 {% else %}
-                  <a href="/accounts/login">Login</a>
+                <li><a href="/accounts/login" class="nav-link px-2">Login</a></li>
                 {% endif %}
+                </ul>
             </header>
         </div>
         <script src="/static/js/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
-
         <script src="/static/js/ImageUploader.js"></script>
-        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="/static/js/tagsinput.js"></script>
+        <script src="/static/js/htmx.js"></script>
+        <script src="/static/js/exif.js"></script>
+        <script src="/static/js/popper.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+
         <script>
+            function sendChange(){
+                //console.log("triggering postform event");
+                const e = new Event("postform");
+                const element = document.querySelector('#formupdate')
+                element.dispatchEvent(e);
+
+                }
          function replaceInsert(tag) {
 	         textstr = document.getElementById("tagsinput").value;
-             console.log("Textstr: '" + textstr + "'");
-             console.log("Textstr len: " + textstr.length);
+             //console.log("Textstr: '" + textstr + "'");
+             //console.log("Textstr len: " + textstr.length);
              textstr = textstr.replace(/ /g,'')
 
              res = textstr.search("," + tag + ",");
              if(res != -1){
-                 console.log("replacing in middle");
+                 //console.log("replacing in middle");
                  textstr = textstr.replace(","+tag, "");
                  $("input[data-role=tagsinput]").tagsinput('removeAll');
                  $("input[data-role=tagsinput]").tagsinput('add', textstr);
-                 return;
+                 $("input[data-role=tagsinput]").trigger("change");
+                             sendChange();
+                             return;
              }
              res = textstr.search("," + tag);
              if(res != -1){
                  textstr = textstr.replace(","+tag, "");
                  $("input[data-role=tagsinput]").tagsinput('removeAll');
                  $("input[data-role=tagsinput]").tagsinput('add', textstr);
+                 $("input[data-role=tagsinput]").trigger("change");
+                             sendChange();
                  return;
              }
              res = textstr.search(tag+ ",");
@@ -60,6 +80,8 @@
                  textstr = textstr.replace(tag+",", "");
                  $("input[data-role=tagsinput]").tagsinput('removeAll');
                  $("input[data-role=tagsinput]").tagsinput('add', textstr);
+                 $("input[data-role=tagsinput]").trigger("change");
+                             sendChange();
                  return;
              }
              if(textstr.length == 0){
@@ -70,12 +92,8 @@
 
              $("input[data-role=tagsinput]").tagsinput('removeAll');
              $("input[data-role=tagsinput]").tagsinput('add', textstr);
-             // console.log("Textstr: '" + textstr + "'");
-             // document.getElementById("tagsinput").value = textstr;
-             // document.getElementById("tagsinput").setAttribute("value",  textstr);
-             // console.log(document.getElementById("tagsinput"));
-             // console.log($('#tagsinput'));
-             //.tagsinput();
+             $("input[data-role=tagsinput]").trigger("change");
+                             sendChange();
 
          }
         </script>

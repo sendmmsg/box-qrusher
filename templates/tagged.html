@@ -4,22 +4,27 @@
         <div class="container pt-5">
         <div class="card" style="width: auto;">
             <div class="card-body">
-                <h5 class="card-title">Tag <b>{{ tag }}</b> </h5>
+                <h5 class="card-title"><b>{{ tag }}</b> </h5>
                     <p class="card-text">
                         {% for mt in tags %}
+                        {% if mt.tag == tag %}
+
+	                        <a href="/tag/{{ mt.tag | slugify }}" class="badge badge-secondary">{{ mt.tag }}</a>
+                            {% else %}
 	                        <a href="/tag/{{ mt.tag | slugify }}" class="badge badge-success">{{ mt.tag }}</a>
+                            {% endif %}
+
                         {% endfor %}
                 </p>
             </div>
         </div>
-            <p>QRunched boxes</p>
             <div class="row mb-2 posts">
                     {% for post in posts %}
                     <div class="col-md-6">
                         <div class="cards">
                             <div class="row no-gutters border rounded  flex-md-row mb-4 shadow-sm h-md-250">
                                 <div class="col p-4 d-flex flex-column position-static">
-                                    <h3 class="my-1"><a href="{% url 'detail' post.slug %}">{{ post.title }}</a></h3>
+                                    <h3 class="my-1"><a href="/q/{{ post.slug }}">{{ post.title }}</a></h3>
                                     <div style="display:flex">
                                         {% for tag in post.tags.all %}
                                         <a href="{% url 'tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>

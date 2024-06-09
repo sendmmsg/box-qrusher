@@ -10,16 +10,27 @@
             <p>QRunched boxes</p>
             <div class="row mb-2 posts">
                     {% for post in posts %}
-                    <div class="col-md-6">
+                    <div class="col md-5">
                         <div class="cards">
                             <div class="row no-gutters border rounded  flex-md-row mb-4 shadow-sm h-md-250">
                                 <div class="col p-4 d-flex flex-column position-static">
-                                    <h3 class="my-1"><a href="{% url 'detail' post.slug %}">{{ post.title }}</a></h3>
-                                    <div style="display:flex">
+                                    <h3 class="my-1"><a href="/q/{{ post.slug }}">{{ post.title }}</a></h3>
+                                    <div style="display:flow">
                                         {% for tag in post.tags.all %}
                                         <a href="{% url 'tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
                                         {% endfor %}
                                     </div>
+                                   <!-- 
+                                       test
+                                    <ul class="list-group list-group-horizontal">
+                                        {% for tag in post.tags.all %}
+                                        <li class="list-group-item">
+                                            <a href="{% url 'tagged' tag.slug %}" class="mr-1 badge badge-info">#{{ tag }}</a>
+                                        </li>
+                                        {% endfor %}
+</ul>
+                                   -->
+
                                     <p class="mb-auto text-muted">{{ post.published }}</p>
                                 </div>
                             </div>

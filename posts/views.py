@@ -154,14 +154,19 @@ def rawupload_view(request, slug):
     return HttpResponse(status=500)
 
 @login_required
-def detail_view(request, slug):
+def detail_view(request, slug, ws):
     form = PostForm(request.POST)
     images = []
+    slug = slug.strip()
     if form.is_valid():
+        print("  valid form found")
+        print(f" {form.cleaned_data}")
         t = form.cleaned_data['title']
-        post = Post.objects.get(title=t)
+        post = Post.objects.get(slug=slug)
+        print(f"  Original tags: {post.tags}")
         post.tags.set(form.cleaned_data['tags'], clear=True)
-        #post.description = form.cleaned_data['description']
+
+        print(f"  updated tags: {post.tags}")
         post.save()
 
     try:
@@ -169,7 +174,6 @@ def detail_view(request, slug):
         print("Found existing post")
         print(f"title: {post.title}")
         print(f"tags: {post.tags.all()}")
-        #print(f"desc: {post.description}")
         images = PostImage.objects.filter(post=post)
     except Post.DoesNotExist as e:
         print("Creating empty post")

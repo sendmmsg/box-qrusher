@@ -52,7 +52,7 @@
       this.placeholderText = element.hasAttribute('placeholder') ? this.$element.attr('placeholder') : '';
       this.inputSize = Math.max(1, this.placeholderText.length);
   
-      this.$container = $('<div class="bootstrap-tagsinput"></div>');
+      this.$container = $('<div class="bootstrap-tagsinput" id="bstags"></div>');
       this.$input = $('<input type="text" placeholder="' + this.placeholderText + '"/>').appendTo(this.$container);
   
       this.$element.before(this.$container);
@@ -144,6 +144,7 @@
         $tag.data('item', item);
         self.findInputWrapper().before($tag);
   
+          //console.log("Adding tag: " + itemText);
         // Check to see if the tag exists in its raw or uri-encoded form
         var optionExists = (
           $('option[value="' + encodeURIComponent(itemValue) + '"]', self.$element).length ||
@@ -174,6 +175,7 @@
           self.$element.trigger($.Event('itemAddedOnInit', { item: item, options: options }));
         } else {
           self.$element.trigger($.Event('itemAdded', { item: item, options: options }));
+          sendChange();
         }
       },
   
@@ -213,6 +215,7 @@
           self.$container.removeClass('bootstrap-tagsinput-max');
   
         self.$element.trigger($.Event('itemRemoved',  { item: item, options: options }));
+        sendChange();
       },
   
       /**
