@@ -34,5 +34,6 @@ urlpatterns = [
     path('accounts/auth', auth_view, name="auth"),
     path('accounts/logout', logout_view, name="logout"),
     path('delimage/<slug:slug>', delimage_view, name="delimage"),
+    path('qr/', qr_view, name="qr"),
     path('qrgen', qrgen_view, name="qrgen"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

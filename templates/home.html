@@ -2,13 +2,15 @@
 
 {% block content %}
         <div class="container pt-5">
-            <p>Tags:</p>
+        <div class="card mt-2" style="width: auto;">
+            <div class="card-body">
             {% for mt in popular_tags %}
 	            <a href="/tag/{{ mt.tag | slugify }}" class="badge badge-success">{{ mt.tag }}</a>
             {% endfor %}
-            </p>
-            <p>QRunched boxes</p>
-            <div class="row mb-2 posts">
+                </p>
+            </div>
+        </div>
+            <div class="row mb-2 mt-2 posts">
                     {% for post in posts %}
                     <div class="col md-5">
                         <div class="cards">

@@ -48,8 +48,10 @@ def qrgen_view(request):
     prefix = request.GET.get("prefix","fail")
     startnum = int(request.GET.get("startnum","0"))
     return HttpResponse(render_svg(prefix,startnum))
+
 def qr_view(request):
-    return redirect("/")
+    context = {}
+    return render(request, 'qr.html', context)
 
 def get_tags_popularity():
     clear_unused_tags()

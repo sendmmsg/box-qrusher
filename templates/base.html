@@ -13,8 +13,10 @@
                 <div class="col-md-3 mb-2 mb-md-0">
                 </div>
                 <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                     <li><a href="/" class="nav-link px-2">Boxes</a></li>
+                    <li><a href="/img" class="nav-link px-2">Images</a></li>
                     <li>
-<a href="/" class="nav-link px-2">
+<a href="/qr" class="nav-link px-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-qr-code" viewBox="0 0 16 16">
   <path d="M2 2h2v2H2z"/>
   <path d="M6 0v6H0V0zM5 1H1v4h4zM4 12H2v2h2z"/>
@@ -24,13 +26,16 @@
 </svg>
 </a>
                     </li>
-                    <!-- <li><a href="/" class="nav-link px-2">Boxes</a></li> -->
-                    <li><a href="/img" class="nav-link px-2">Images</a></li>
                 {% if user.is_authenticated %}
-                <li>  <a href="/accounts/logout" class="nav-link px-2" >{{ user.username }}</a></li>
+                <li>  <a href="/accounts/logout" class="nav-link px-2" >Logout</a></li>
+                {% if user.is_superuser %}
+                <li>  <a href="/admin" class="nav-link px-2">admin</a></li>
+                {% endif %}
+
                 {% else %}
                 <li><a href="/accounts/login" class="nav-link px-2">Login</a></li>
                 {% endif %}
+
                 </ul>
             </header>
         </div>
