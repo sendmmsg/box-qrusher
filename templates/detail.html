@@ -1,52 +1,49 @@
 {% extends 'base.html' %}
-
 {% block content %}
     <style>
-.img-wrapper {
-  position: relative;
-}
-.img-overlay .btn {
-  position: absolute;
-  top: 7%;
-  left: 7%;
-  transform: translate(-20%, -20%);
-  -ms-transform: translate(-50%, -50%);
-  background-color: #555;
-  color: white;
-  font-size: 16px;
-  padding: 7px 8px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
+        .img-wrapper {
+            position: relative;
+        }
+        .img-overlay .btn {
+            position: absolute;
+            top: 7%;
+            left: 7%;
+            transform: translate(-20%, -20%);
+            -ms-transform: translate(-50%, -50%);
+            background-color: #555;
+            color: white;
+            font-size: 16px;
+            padding: 7px 8px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
-.img-overlay .btn:hover {
-  background-color: black;
-}
-
-        </style>
-    
+        .img-overlay .btn:hover {
+            background-color: black;
+        }
+    </style>
 <!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Delete image</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-          Do you want to delete image blalba?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" hx-post="/delimage/pk" >Delete image</button>
-      </div>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Delete image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Do you want to delete image blalba?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" hx-post="/delimage/pk" >Delete image</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-<div class="container-fluid">
+    <div class="container-fluid">
         <div class="card mt-2" style="width: auto;">
             <div class="card-body">
                 <h5 class="card-title">Box number {{ post.title }} </h5>
@@ -59,70 +56,64 @@
                     <div class="form-group">
                         <label>Contains</label>
                         <input type="text" data-role="tagsinput" class="form-control" name="tags" id="tagsinput" value="
-                                     {% for tag in post.tags.all %}
-                                     {{ tag }} ,
-                                     {% endfor %}">
+                                                                                                                        {% for tag in post.tags.all %}
+                                                                                                                            {{ tag }} ,
+                                                                                                                        {% endfor %}">
                     </div>
-                <!--    <p/>
-                    <p class="card-text">Add / Remove tags:</p>
                     {% for mt in common_tags %}
                         <div class="badge badge-success" hx-on:click="replaceInsert('{{ mt }}')">{{ mt }}</div>
                     {% endfor %}
                 </p>
-                -->
                 </form>
             </div>
         </div>
         <div class="card mt-2" style="width: auto;">
             <div class="card-body">
                 <h5 class="card-title">Existing Tags</h5>
-                    {% for mt in common_tags %}
-                        <div class="badge badge-success" hx-on:click="replaceInsert('{{ mt }}')">{{ mt }}</div>
-                    {% endfor %}
+                {% for mt in common_tags %}
+                    <div class="badge badge-success" hx-on:click="replaceInsert('{{ mt }}')">{{ mt }}</div>
+                {% endfor %}
             </div>
         </div>
         <div class="card mt-2" style="width: auto;">
             <div class="card-body">
                 <h5 class="card-title">Image upload</h5>
-                <!-- <input id="fileInputElement" style="display: none;" name="uploaded_file" class="btn btn-primary" type="file" multiple/> -->
-                 <input id="cameraInputElement" style="display: none;" name="captured_file" class="btn btn-primary" type="file" accept="image/*" capture="environment" multiple />
-                 <input id="fileInputElement" style="display: none;" name="uploaded_file" class="btn btn-secondary" type="file" multiple/>
+                <input id="cameraInputElement" style="display: none;" name="captured_file" class="btn btn-primary" type="file" accept="image/*" capture="environment" multiple />
+                <input id="fileInputElement" style="display: none;" name="uploaded_file" class="btn btn-secondary" type="file" multiple/>
                 <div class="progress">
                     <div id="pb" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-	            <div id="fileProgress"></div>
-        <button class="btn btn-primary" hx-on:click="document.getElementById('cameraInputElement').click();">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
-  <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z"/>
-  <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
-</svg>
-             Capture</button>
-        <button class="btn btn-secondary" hx-on:click="document.getElementById('fileInputElement').click();">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
-  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-  <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
-</svg>
-
-Upload</button>
-
+                <div id="fileProgress"></div>
+                <button class="btn btn-primary" hx-on:click="document.getElementById('cameraInputElement').click();">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
+                        <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z"/>
+                        <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+                    </svg>
+                    Capture
+                </button>
+                <button class="btn btn-secondary" hx-on:click="document.getElementById('fileInputElement').click();">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
+                    </svg>
+                    Upload
+                </button>
             </div>
         </div>
-
         <div class="card mt-2" style="width: auto;" hx-trigger="load,wire-reload from:body">
             <div class="card-body">
-
                 <h5 class="card-title">Box content</h5>
                 <section id="gallery" class="row no-gutters">
                     {% for image in images reversed %}
-                    {% if not image.hidden %}
-                        <div class="img-wrapper">
-                            <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
-                                <img src="/images/{{image.image}}" class="w-100">
-                            </a>
-                            <div class="img-overlay">
-                                <button hx-post="/delimage/{{image.pk}}" class="btn btn-md btn-success">X</button>
-                          </div>
-                        </div>
+                        {% if not image.hidden %}
+                            <div class="img-wrapper">
+                                <a class="col-12 col-sm-6 col-lg-3" href="/images/{{ image.image}}">
+                                    <img src="/images/{{image.image}}" class="w-100">
+                                </a>
+                                <div class="img-overlay">
+                                    <button hx-post="/delimage/{{image.pk}}" class="btn btn-md btn-success">X</button>
+                                </div>
+                            </div>
                         {% endif %}
                     {% endfor %}
                 </section>
@@ -130,47 +121,47 @@ Upload</button>
         </div>
     </div>
     {% csrf_token %}
-	    <script type="text/javascript">
-         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-		 var uploader = new ImageUploader({
-             inputElement : document.getElementById('cameraInputElement'),
-             requestHeaders: {"X-CSRFToken":  csrftoken, "test-header":"test"},
-             uploadUrl : '/rawupload/{{ post.title }}',
-             onProgress : function(event) {
-                 $('#progress').text('Completed '+event.done+' files of '+event.total+' total.');
-                 $( "#pb" ).css({"width": ((event.done / event.total)*100) + "%"})
-             },
-             onFileComplete : function(event, file) {
-            	 $('#fileProgress').append('Finished file '+file.fileName+' with response from server '+event.target.status+'<br />');
-             },
-             onComplete : function(event) {
-                 $('#progress').text('Completed all '+event.done+' files!');window.location.reload();
+    <script type="text/javascript">
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        var uploader = new ImageUploader({
+            inputElement : document.getElementById('cameraInputElement'),
+            requestHeaders: {"X-CSRFToken":  csrftoken, "test-header":"test"},
+            uploadUrl : '/rawupload/{{ post.title }}',
+            onProgress : function(event) {
+                $('#progress').text('Completed '+event.done+' files of '+event.total+' total.');
+                $( "#pb" ).css({"width": ((event.done / event.total)*100) + "%"})
+            },
+            onFileComplete : function(event, file) {
+                $('#fileProgress').append('Finished file '+file.fileName+' with response from server '+event.target.status+'<br />');
+            },
+            onComplete : function(event) {
+                $('#progress').text('Completed all '+event.done+' files!');window.location.reload();
                  //$('#progressbar').progressbar({ value: (event.done / event.total) * 100 })
-             },
-             maxWidth: 1024,
-	         maxUpload: 10048576   ,  // this specifies a limit for the size of the base-64 upload to the server
-	         quality: 0.90,
-             debug : false
-         });
-		 var uploaderfile = new ImageUploader({
-             inputElement : document.getElementById('fileInputElement'),
-             requestHeaders: {"X-CSRFToken":  csrftoken, "test-header":"test"},
-             uploadUrl : '/rawupload/{{ post.title }}',
-             onProgress : function(event) {
-                 $('#progress').text('Completed '+event.done+' files of '+event.total+' total.');
-                 $( "#pb" ).css({"width": ((event.done / event.total)*100) + "%"})
-             },
-             onFileComplete : function(event, file) {
-            	 $('#fileProgress').append('Finished file '+file.fileName+' with response from server '+event.target.status+'<br />');
-             },
-             onComplete : function(event) {
-                 $('#progress').text('Completed all '+event.done+' files!');window.location.reload();
+            },
+            maxWidth: 1024,
+            maxUpload: 10048576   ,  // this specifies a limit for the size of the base-64 upload to the server
+            quality: 0.90,
+            debug : false
+        });
+        var uploaderfile = new ImageUploader({
+            inputElement : document.getElementById('fileInputElement'),
+            requestHeaders: {"X-CSRFToken":  csrftoken, "test-header":"test"},
+            uploadUrl : '/rawupload/{{ post.title }}',
+            onProgress : function(event) {
+                $('#progress').text('Completed '+event.done+' files of '+event.total+' total.');
+                $( "#pb" ).css({"width": ((event.done / event.total)*100) + "%"})
+            },
+            onFileComplete : function(event, file) {
+                $('#fileProgress').append('Finished file '+file.fileName+' with response from server '+event.target.status+'<br />');
+            },
+            onComplete : function(event) {
+                $('#progress').text('Completed all '+event.done+' files!');window.location.reload();
                  //$('#progressbar').progressbar({ value: (event.done / event.total) * 100 })
-             },
-             maxWidth: 1024,
-	         maxUpload: 10048576   ,  // this specifies a limit for the size of the base-64 upload to the server
-	         quality: 0.90,
-             debug : false
-         });
-        </script>
+            },
+            maxWidth: 1024,
+            maxUpload: 10048576   ,  // this specifies a limit for the size of the base-64 upload to the server
+            quality: 0.90,
+            debug : false
+        });
+    </script>
 {% endblock content %}

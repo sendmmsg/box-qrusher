@@ -1,38 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    
-<!-- Modal -->
-<div class="container-fluid" >
-    {% if msg is not None  %}
-    
-    message is {{ msg }}
-    {% endif %}
-    <div class="card" style="width: auto;">
-        <div class="card-body">
-        <h5 class="card-title">Login required   </h5>
-        <form method="POST" action="/accounts/auth" id="formupdate">
-        {% csrf_token %}
-            <div class="form-group">
-                 <label>Username</label>
-                 <input type="text" class="form-control" name="username">
-            </div>
-            <div class="form-group">
-                 <label>Password</label>
-                 <input type="password" 
-                        class="form-control" 
-                        name="password"> 
-            </div>
-                 <input type="hidden" 
-                        class="form-control" 
-                        name="next"
-                        value="{{next}}"
-                        > 
 
-            <p/>
-             <button type="submit" class="btn btn-primary">Login</button>
-       </form>
-       </div>
-   </div>
-</div>
+<!-- Modal -->
+    <div class="container-fluid" >
+        {% if msg is not None  %}
+
+            message is {{ msg }}
+        {% endif %}
+        <div class="card" style="width: auto;">
+            <div class="card-body">
+                <h5 class="card-title">Login required   </h5>
+                <form method="POST" action="/accounts/auth" id="formupdate">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password"
+                               class="form-control"
+                               name="password"/>
+                    </div>
+                    <input type="hidden"
+                           class="form-control"
+                           name="next"
+                           value="{{next}}"
+                    />
+
+                    <p/>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
