@@ -3,3 +3,4 @@ django
 django_htmx==1.17.3
 django_taggit==5.0.1
 qrcode==7.4.2
+Pillow
